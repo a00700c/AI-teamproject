@@ -3,7 +3,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-from sklearn.metrics import mean_absolute_error
+import numpy as np
 
 # dataset import
 data = pd.read_csv('Concrete_Data_Yeh.csv')
@@ -34,6 +34,9 @@ grid_GBR = GridSearchCV(estimator=GBR, param_grid=parameters, cv=2, n_jobs=-1)
 # train set 을 학습시킨다.
 grid_GBR.fit(X_train, y_train)
 
+# GridsearchCV 를 통해 찾아낸 best parameters 를 출력한다.
+print('best parameters : ', grid_GBR.best_params_)
+
 # 학습된 모델을 이용하여 test set 에 대하여 predict 를 진행한다.
 pred = grid_GBR.predict(X_test)
 
@@ -42,8 +45,14 @@ pd.DataFrame(pred).to_csv('Concrete_predict.csv', index=False)
 
 # predict 한 값과 실제 output 값을 이용하여 RMSE 와 MAE 를 구한다.
 RMSE = mean_squared_error(y_test, pred) ** 0.5
-MAE = mean_absolute_error(y_test, pred)
 
-# RMSE와 MAE를 출력한다.
+# MAPE 를 구하는 함수이다.
+def find_mape(y_test, pred):
+    return np.mean(np.abs((y_test - pred) / y_test)) * 100
+
+
+MAPE = find_mape(y_test, pred)
+
+# RMSE와 MAPE를 출력한다.
 print('the RMSE of the predict is ', RMSE)
-print('the MAE of the predict is ', MAE)
+print('the MAPE of the predict is ', MAPE)
