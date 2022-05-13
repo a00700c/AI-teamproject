@@ -15,6 +15,9 @@ data_y = data['csMPa']
 # train set 과 test set 을 분리한다. 8:2의 비율로 무작위로 추출하였다.
 X_train, X_test, y_train, y_test = train_test_split(data_x, data_y, test_size=0.2, shuffle=True, random_state=7)
 
+# test 의 output 값을 csv 파일로 추출한다.
+y_test.to_csv('concrete_testOutput.csv', index=False)
+
 # GradientBoostingRegressor 을 가져온다
 GBR = GradientBoostingRegressor()
 
